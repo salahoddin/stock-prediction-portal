@@ -10,6 +10,8 @@ const [formState, setFormState] = useState({
     confirmPassword: ""
 });
 
+const [errors, setErrors] = useState({});
+
 const handleChange = (event) => {
     const { name, value } = event.target;
     setFormState((prevState) => ({ ...prevState, [name]: value }));
@@ -17,21 +19,18 @@ const handleChange = (event) => {
 
 const handleSubmit = async (event) => {
     event.preventDefault();
-    if (formState.password.length < 8) {
-        alert("Password must be at least 8 characters long");
-        return;
-    }
-    if (formState.password !== formState.confirmPassword) {
-        alert("Passwords do not match");
-        return;
-    }
 
+    if (formState.password !== formState.confirmPassword) {
+        setErrors((prevState) => ({ ...prevState, confirmPassword: "Passwords do not match" }));
+        return;
+    }
     // delete formState.confirmPassword;
     try {
         const response = await axios.post("http://127.0.0.1:8000/api/v1/auth/register/", formState)
         console.log(response.data);
     } catch (error) {
         console.error(`Registration Error: ${error.response.data}`);
+        setErrors(error.response.data);
     }
 };
 
@@ -42,11 +41,23 @@ const handleSubmit = async (event) => {
                     <div className="col-md-6 bg-light-dark p-5 rounded">
                         <h3 className="text-light text-center">Create an Account</h3>
                         <form onSubmit={handleSubmit}>
-                            <input type="text" className="form-control mb-2" placeholder="Enter username" name="username" value={formState.username} onChange={handleChange}/>
-                            <input type="email" className="form-control mb-2" placeholder="Enter email" name="email" value={formState.email} onChange={handleChange}/>
-                            <input type="password" className="form-control mb-2" placeholder="Enter password" name="password" value={formState.password} onChange={handleChange}/>
-                            <input type="password" className="form-control mb-5" placeholder="Confirm password" name="confirmPassword" value={formState.confirmPassword} onChange={handleChange}/>
-                            <button type="submit" className="btn btn-info d-block mx-auto">Register</button>
+                            <div className="mb-3">
+                                <input type="text" className="form-control mb-2" placeholder="Enter username" name="username" value={formState.username} onChange={handleChange}/>
+                                <small>{errors.username && <div className="text-danger">{errors.username}</div>}</small>
+                            </div>
+                            <div className="mb-3">
+                                <input type="email" className="form-control mb-2" placeholder="Enter email" name="email" value={formState.email} onChange={handleChange}/>
+                                <small>{errors.username && <div className="text-danger">{errors.email}</div>}</small>
+                            </div>
+                            <div className="mb-3">
+                                <input type="password" className="form-control mb-2" placeholder="Enter password" name="password" value={formState.password} onChange={handleChange}/>
+                                <small>{errors.password && <div className="text-danger">{errors.password}</div>}</small>
+                            </div>
+                            <div className="mb-3">
+                                <input type="password" className="form-control mb-2" placeholder="Confirm password" name="confirmPassword" value={formState.confirmPassword} onChange={handleChange}/>
+                                <small>{errors.confirmPassword && <div className="text-danger">{errors.confirmPassword}</div>}</small>
+                            </div>
+                            <button type="submit" className="btn btn-info">Register</button>
                         </form>
                     </div>
                 </div>
