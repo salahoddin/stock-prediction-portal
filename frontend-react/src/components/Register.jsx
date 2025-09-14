@@ -11,6 +11,8 @@ const [formState, setFormState] = useState({
 });
 
 const [errors, setErrors] = useState({});
+const [success, setSuccess] = useState(false);
+
 
 const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,6 +30,9 @@ const handleSubmit = async (event) => {
     try {
         const response = await axios.post("http://127.0.0.1:8000/api/v1/auth/register/", formState)
         console.log(response.data);
+        console.log("Registration successful");
+        setErrors({});
+        setSuccess(true);
     } catch (error) {
         console.error(`Registration Error: ${error.response.data}`);
         setErrors(error.response.data);
@@ -57,7 +62,8 @@ const handleSubmit = async (event) => {
                                 <input type="password" className="form-control mb-2" placeholder="Confirm password" name="confirmPassword" value={formState.confirmPassword} onChange={handleChange}/>
                                 <small>{errors.confirmPassword && <div className="text-danger">{errors.confirmPassword}</div>}</small>
                             </div>
-                            <button type="submit" className="btn btn-info">Register</button>
+                            {success && <div className="alert alert-success">Registration successful!</div>}
+                            <button type="submit" className="btn btn-info form-control mb-2">Register</button>
                         </form>
                     </div>
                 </div>
