@@ -1,5 +1,9 @@
 import { useState } from "react"
 import axios from "axios"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+
+
 
 const Register = () => {
 
@@ -12,7 +16,7 @@ const [formState, setFormState] = useState({
 
 const [errors, setErrors] = useState({});
 const [success, setSuccess] = useState(false);
-
+const [loading, setLoading] = useState(false);
 
 const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,6 +25,7 @@ const handleChange = (event) => {
 
 const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true)
 
     if (formState.password !== formState.confirmPassword) {
         setErrors((prevState) => ({ ...prevState, confirmPassword: "Passwords do not match" }));
@@ -36,6 +41,8 @@ const handleSubmit = async (event) => {
     } catch (error) {
         console.error(`Registration Error: ${error.response.data}`);
         setErrors(error.response.data);
+    } finally {
+        setLoading(false);
     }
 };
 
@@ -63,7 +70,8 @@ const handleSubmit = async (event) => {
                                 <small>{errors.confirmPassword && <div className="text-danger">{errors.confirmPassword}</div>}</small>
                             </div>
                             {success && <div className="alert alert-success">Registration successful!</div>}
-                            <button type="submit" className="btn btn-info form-control mb-2">Register</button>
+                            { loading ? <div className="btn btn-info form-control mb-2 disabled"> <FontAwesomeIcon icon={faSpinner} spin></FontAwesomeIcon> Loading... </div> : <button type="submit" className="btn btn-info form-control mb-2">Register</button>}
+
                         </form>
                     </div>
                 </div>
