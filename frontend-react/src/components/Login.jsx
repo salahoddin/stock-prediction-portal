@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from "axios"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
     const [formState, setFormState] = useState({
@@ -9,9 +10,10 @@ const Login = () => {
         password: ""
     });
 
-    const [errors, setErrors] = useState({});
-    const [success, setSuccess] = useState(false);
+    const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -21,22 +23,20 @@ const Login = () => {
         event.preventDefault();
         setLoading(true)
         try {
-            const userData = {
-                username: formState.username,
-                password: formState.password
-            }
-            console.log("userdata ====>", userData);
             const response = await axios.post(
                 `${import.meta.env.VITE_API_BASE_URL}/token/`,
                 formState
             );
-            console.log(response.data);
+            localStorage.setItem("accessToken", response.data.access);
+            localStorage.setItem("refreshToken", response.data.refresh);
             console.log("login successful");
-            setErrors({});
-            setSuccess(true);
+
+            setErrors("");
+
+            navigate("/")
         } catch (error) {
             console.error(`login Error: ${error.response.data}`);
-            setErrors(error.response.data);
+            setErrors("invalid username or password");
         } finally {
             setLoading(false);
         }
@@ -55,6 +55,7 @@ const Login = () => {
                             <div className="mb-3">
                                 <input type="password" className="form-control mb-2" placeholder="Enter password" name="password" value={formState.password} onChange={handleChange} />
                             </div>
+                            {errors && <div className="alert alert-danger">{errors}</div>}
                             {loading ? <div className="btn btn-info form-control mb-2 disabled"> <FontAwesomeIcon icon={faSpinner} spin></FontAwesomeIcon> Logging in... </div> : <button type="submit" className="btn btn-info form-control mb-2">Login</button>}
                         </form>
                     </div>
