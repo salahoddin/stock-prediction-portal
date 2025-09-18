@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import axios from "axios"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from "react-router-dom"
+import { AuthContext } from "../AuthProvider"
 
 const Login = () => {
     const [formState, setFormState] = useState({
@@ -14,6 +15,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -29,6 +31,7 @@ const Login = () => {
             );
             localStorage.setItem("accessToken", response.data.access);
             localStorage.setItem("refreshToken", response.data.refresh);
+            setIsLoggedIn(true);
             console.log("login successful");
 
             setErrors("");
