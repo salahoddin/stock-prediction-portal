@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom"
 import "./assets/css/style.css"
+import { AuthProvider } from "./AuthProvider"
 import Home from "./components/Home"
 import Register from "./components/Register"
 import Header from "./components/Header"
@@ -9,15 +10,17 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Header> </Header>
+      <AuthProvider>
+        <BrowserRouter>
+          <Header> </Header>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
           </Routes>
-        <Footer> </Footer>
-      </BrowserRouter>
+          <Footer> </Footer>
+        </BrowserRouter>
+      </AuthProvider>
     </>
   )
 }
