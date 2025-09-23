@@ -7,14 +7,17 @@ function Dashboard() {
     useEffect(() => {
         const fetchProtectedData = async () => {
             try {
-                const response = await axiosInstance.get('/api/protected-data');
-                const data = await response.json();
-                console.log(data);
+                const response = await axiosInstance.get('/auth/protected-view/', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
         };
-
+        fetchProtectedData();
     }, []);
 
     return (
