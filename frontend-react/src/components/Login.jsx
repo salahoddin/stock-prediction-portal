@@ -1,9 +1,9 @@
 import { useState, useContext } from "react"
-import axios from "axios"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../AuthProvider"
+import axiosInstance from "../axiosInstance"
 
 const Login = () => {
     const [formState, setFormState] = useState({
@@ -25,8 +25,8 @@ const Login = () => {
         event.preventDefault();
         setLoading(true)
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/token/`,
+            const response = await axiosInstance.post(
+                '/auth/token/',
                 formState
             );
             localStorage.setItem("accessToken", response.data.access);
