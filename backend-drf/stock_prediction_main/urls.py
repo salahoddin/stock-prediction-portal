@@ -28,8 +28,10 @@ urlpatterns = [
     # Core API endpoints
     path("api/v1/", include("api.urls")),
     # Authentication endpoints
-    path("api/v1/auth/", include("accounts.urls")),
+    path("api/v1/", include("accounts.urls")),
     # JWT
-    path("api/v1/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/v1/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path(
+        "api/v1/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
+    ),
 ]

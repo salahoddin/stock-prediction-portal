@@ -1,7 +1,7 @@
 import { useState } from "react"
-import axios from "axios"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import axiosInstance from "../axiosInstance"
 
 
 
@@ -33,8 +33,8 @@ const Register = () => {
         }
         // delete formState.confirmPassword;
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/auth/register/`,
+            const response = await axiosInstance.post(
+                '/auth/register/',
                 formState
             );
             console.log(response.data);
