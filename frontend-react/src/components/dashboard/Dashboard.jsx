@@ -11,6 +11,10 @@ function Dashboard() {
     const [plot, setPlot] = useState("");
     const [ma100, setMa100] = useState("");
     const [ma200, setMa200] = useState("");
+    const [finalPlot, setFinalPlot] = useState("");
+    const [evaluation, setEvaluation] = useState(null);
+    const plotFrameStyle = { maxWidth: 1000, margin: "0 auto" };
+
 
     useEffect(() => {
         const fetchProtectedData = async () => {
@@ -35,10 +39,15 @@ function Dashboard() {
             const plotUrl = `${backendRoot}${response.data.plot_img_url}`
             const ma100Url = `${backendRoot}${response.data.plot_100_dma_url}`
             const ma200Url = `${backendRoot}${response.data.plot_200_dma_url}`
+            const finalPlotUrl = `${backendRoot}${response.data.final_prediction_plot_url}`
+            const evaluation = response.data.evaluation
+
 
             setMa100(ma100Url);
             setMa200(ma200Url);
             setPlot(plotUrl);
+            setFinalPlot(finalPlotUrl);
+            setEvaluation(evaluation);
 
             setStatusMessage(response.data?.status ?? "success");
             setErrorMessage("");
@@ -72,31 +81,58 @@ function Dashboard() {
                     <div className="prediction mt-5">
                         <div className="p-3">
                             {plot && (
-                                <img
-                                    src={plot}
-                                    alt=""
-                                    style={{ maxWidth: '100%', display: 'block', margin: '0 auto' }}
-                                />
+                                <div style={plotFrameStyle}>
+                                    <img
+                                        src={plot}
+                                        alt=""
+                                        style={{ width: "100%", display: "block" }}
+                                    />
+                                </div>
                             )}
                         </div>
                         <div className="p-3">
                             {ma100 && (
-                                <img
-                                    src={ma100}
-                                    alt=""
-                                    style={{ maxWidth: '100%', display: 'block', margin: '0 auto' }}
-                                />
+                                <div style={plotFrameStyle}>
+                                    <img
+                                        src={ma100}
+                                        alt=""
+                                        style={{ width: "100%", display: "block" }}
+                                    />
+                                </div>
                             )}
                         </div>
                         <div className="p-3">
                             {ma200 && (
-                                <img
-                                    src={ma200}
-                                    alt=""
-                                    style={{ maxWidth: '100%', display: 'block', margin: '0 auto' }}
-                                />
+                                <div style={plotFrameStyle}>
+                                    <img
+                                        src={ma200}
+                                        alt=""
+                                        style={{ width: "100%", display: "block" }}
+                                    />
+                                </div>
                             )}
                         </div>
+                        <div className="p-3">
+                            {finalPlot && (
+                                <div style={plotFrameStyle}>
+                                    <img
+                                        src={finalPlot}
+                                        alt=""
+                                        style={{ width: "100%", display: "block" }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        {evaluation && (
+                            <div className="p-3">
+                                <div className="text-light" style={plotFrameStyle}>
+                            <h4>Model Evaluation</h4>
+                            <p>Mean Squared Error (MSE): <span style={{ color: 'green' }}>{evaluation?.mse}</span></p>
+                            <p>Root Mean Squared Error (RMSE): <span style={{ color: 'green' }}>{evaluation?.rmse}</span></p>
+                            <p>R-Squared (r2): <span style={{ color: 'green' }}>{evaluation?.r2}</span></p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
